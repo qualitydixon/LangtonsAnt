@@ -19,5 +19,6 @@ public class Config {
     public static final int ANTSTARTX = 50;
     public static final int ANTSTARTY = 50;
     public static final int TURNS = 11000;
+    public static final int TIMESTEP = 100;
 
 }
