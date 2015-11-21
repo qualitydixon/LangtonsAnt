@@ -11,23 +11,59 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+
 import static application.Config.*;
 
 
 public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
-		BorderPane root = new BorderPane();
-		Scene scene = new Scene(root,WINDOWWIDTH,WINDOWHEIGHT,Color.ALICEBLUE);
+		//BorderPane root = new BorderPane();
+		Group root = new Group();
+		Scene scene = new Scene(root,WINDOWWIDTH,WINDOWHEIGHT,BACKGROUND);
 		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 		primaryStage.setTitle("Langton's Ant");
 		primaryStage.setScene(scene);
 		primaryStage.show();
+
+		// Add Rules
+		Text rulesTitle = new Text(RULESTITLE);
+		rulesTitle.setFont(Font.font ("BetecknaLowerCaseMedium", 20));
+		Text rules = new Text("1. If current square is white, Ant rotates"
+				+ " 90 degrees to the right and moves forward one square. \n \n"
+				+ "2. If current square is black, Ant rotates"
+				+ " 90 degrees to the left and moves forward one square.  \n");
+		rules.setWrappingWidth(270);
+		rules.setFont(Font.font ("Sans Regular", 16));
+		root.getChildren().add(rules);
+
+		// Reset/Play/Stop button
+        Button reset = new Button("Reset");
+        Button play = new Button("Play");
+        Button pause = new Button("Pause");
+
+        VBox vbox = new VBox(8);
+        vbox.getChildren().addAll(rulesTitle, rules);
+        vbox.setLayoutX(610);
+        vbox.setLayoutY(10);
+        root.getChildren().add(vbox);
+
+        HBox hbox = new HBox(10);
+        hbox.setLayoutX(660);
+        hbox.setLayoutY(300);
+        hbox.getChildren().addAll(pause, play, reset);
+        root.getChildren().add(hbox);
 
 		// DRAW GRID
 		Rectangle[][] grid = new Rectangle[GRIDSIZE][GRIDSIZE];
@@ -40,6 +76,7 @@ public class Main extends Application {
 				grid[i][j] = new Rectangle();
 				grid[i][j].setFill(Color.GHOSTWHITE);
 				grid[i][j].setStroke(Color.BLACK);
+				grid[i][j].setStrokeWidth(.5);
 				grid[i][j].setX(x);
 				grid[i][j].setY(y);
 				grid[i][j].setWidth(RECTSIZE);
@@ -94,7 +131,7 @@ public class Main extends Application {
 					if(i%2==0 && currentSquare.getFill()==Color.GHOSTWHITE){
 						a = a + right;
 						RIGHT = true;
-					}else if(i%2==0 && currentSquare.getFill()==Color.BLACK){
+					}else if(i%2==0 && currentSquare.getFill()==OFFBLACK){
 						a = a + left;
 						RIGHT = false;
 					}else if(i%2==1 && currentSquare.getFill()==Color.GHOSTWHITE){
@@ -126,39 +163,57 @@ public class Main extends Application {
 
 					// Change color of current square
 					if(currentSquare.getFill()==Color.GHOSTWHITE){
-						currentSquare.setFill(Color.BLACK);
+						currentSquare.setFill(OFFBLACK);
 					}else{currentSquare.setFill(Color.GHOSTWHITE);}
 
 					// Change stroke back to Black
-					currentSquare.setStroke(Color.BLACK);
+					currentSquare.setStroke(OFFBLACK);
 
 					// Set new current square
 					currentSquare = grid[a][b];
+					currentSquare.setStrokeWidth(.5);
 
-					// Yellow stroke indicates current position of Ant
-					currentSquare.setStroke(Color.YELLOW);
-					
+					// Red stroke indicates current position of Ant
+					currentSquare.setStroke(ANTON);
+					currentSquare.setStrokeWidth(1.5);
+
 					// Iterate i
 					i++;
 
 			}
 			}));
 
-
 			loop.setCycleCount(Timeline.INDEFINITE);
 	        loop.play();
-//			final Rectangle rectBasicTimeline = new Rectangle(100, 50, 100, 50);
-//			rectBasicTimeline.setFill(Color.RED);
-//			root.getChildren().add(rectBasicTimeline);
-//
-//			final Timeline timeline = new Timeline();
-//			timeline.setCycleCount(Timeline.INDEFINITE);
-//			timeline.setAutoReverse(false);
-//			final KeyValue kv = new KeyValue(rectBasicTimeline.xProperty(), 300);
-//			final KeyFrame kf = new KeyFrame(Duration.millis(1000), kv);
-//			timeline.getKeyFrames().add(kf);
-//			timeline.play();
 
+	     // Set reset button event
+	        reset.setOnAction(new EventHandler<ActionEvent>() {
+	            @Override public void handle(ActionEvent e) {
+	                for(Rectangle[] i : grid) {
+	                	for(Rectangle j : i) {
+	                		j.setFill(WHITE);
+	                		j.setStrokeWidth(.5);
+	                	}
+	                }
+	                //currentSquare = grid[ANTSTARTX][ANTSTARTY];
+
+
+	            }
+	        });
+
+	        // Set play button event
+	        play.setOnAction(new EventHandler<ActionEvent>() {
+	            @Override public void handle(ActionEvent e) {
+	                loop.play();
+	            }
+	        });
+
+	        // Set pause button event
+	        pause.setOnAction(new EventHandler<ActionEvent>() {
+	            @Override public void handle(ActionEvent e) {
+	                loop.pause();
+	            }
+	        });
 
 	}
 
