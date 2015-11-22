@@ -14,6 +14,8 @@ import javafx.util.Duration;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -36,17 +38,27 @@ public class Main extends Application {
 		primaryStage.setTitle("Langton's Ant");
 		primaryStage.setScene(scene);
 		primaryStage.show();
+		
+		// Set background
+		ImageView table = new ImageView(new Image(getClass().getResourceAsStream("/bg_clipped2.png")));
+        table.setFocusTraversable(true);
+        table.setLayoutX(600);
+        table.setLayoutY(0);
+        table.setFitWidth(300);
+        table.setFitHeight(600);
+        root.getChildren().add(table);
 
 		// Add Rules
 		Text rulesTitle = new Text(RULESTITLE);
 		rulesTitle.setFont(Font.font ("BetecknaLowerCaseMedium", 20));
-		Text rules = new Text("1. If current square is white, Ant rotates"
+		rulesTitle.setFill(WHITE);
+		Text rules = new Text("1. If current square is white it changes to black, the Ant rotates"
 				+ " 90 degrees to the right and moves forward one square. \n \n"
-				+ "2. If current square is black, Ant rotates"
+				+ "2. If current square is black it changes to white, the Ant rotates"
 				+ " 90 degrees to the left and moves forward one square.  \n");
 		rules.setWrappingWidth(270);
 		rules.setFont(Font.font ("Sans Regular", 16));
-		root.getChildren().add(rules);
+		rules.setFill(WHITE);
 
 		// Reset/Play/Stop button
         Button reset = new Button("Reset");
@@ -56,11 +68,11 @@ public class Main extends Application {
         VBox vbox = new VBox(8);
         vbox.getChildren().addAll(rulesTitle, rules);
         vbox.setLayoutX(610);
-        vbox.setLayoutY(10);
+        vbox.setLayoutY(73);
         root.getChildren().add(vbox);
 
         HBox hbox = new HBox(10);
-        hbox.setLayoutX(660);
+        hbox.setLayoutX(658);
         hbox.setLayoutY(300);
         hbox.getChildren().addAll(pause, play, reset);
         root.getChildren().add(hbox);
