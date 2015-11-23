@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 public class MakeUI {
@@ -38,7 +39,7 @@ public class MakeUI {
         // Add Rules
 		Text rulesTitle = new Text(RULESTITLE);
 		rulesTitle.setFont(TITLEFONT);
-		rulesTitle.setFill(WHITE);
+		rulesTitle.setFill(Color.WHITE);
 		Text rules = new Text("1. If current square is white it changes to black, the Ant rotates"
 				+ " 90 degrees to the right and moves forward one square. \n \n"
 				+ "2. If current square is black it changes to white, the Ant rotates"
@@ -73,22 +74,32 @@ public class MakeUI {
         	        1000.0
         	    );
     	timeStep = new ComboBox<Double>(options);
-    	timeStep.setPromptText("timestep (ms)");
+    	Label ts = new Label("Timestep (ms)");
+    	ts.setFont(MAINFONT);
+		ts.setTextFill(WHITE);
+
 
     	// HBox containing buttons
-        HBox hbox = new HBox(8);
-        hbox.getChildren().addAll(
+        HBox buttons = new HBox(8);
+        buttons.getChildren().addAll(
         		pause,
         		play,
         		reset);
+
+        // HBox containing combobox and text
+        HBox tStep = new HBox(8);
+        tStep.setAlignment(Pos.CENTER);
+        tStep.getChildren().addAll(
+        		ts,
+        		timeStep);
 
         // VBox containing text and buttons
         vbox = new VBox(10);
         vbox.getChildren().addAll(
         		rulesTitle,
         		rules,
-        		hbox,
-        		timeStep,
+        		buttons,
+        		tStep,
         		turnLabel);
         vbox.setAlignment(Pos.CENTER);
         vbox.setLayoutX(620);
