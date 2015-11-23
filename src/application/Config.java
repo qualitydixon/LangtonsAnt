@@ -7,6 +7,7 @@
 package application;
 
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 /**
  *
@@ -31,5 +32,8 @@ public class Config {
 
     public static final String RULESTITLE = "Rules for Langton's Ant";
     public static final String HEADERTEXT = "Langton's Ant";
+
+    public static final Font MAINFONT = Font.font("Ubuntu Mono", 16);
+    public static final Font TITLEFONT = Font.font ("BetecknaLowerCaseMedium", 20);
 
 }

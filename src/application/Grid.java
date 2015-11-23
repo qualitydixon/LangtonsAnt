@@ -32,4 +32,14 @@ public class Grid {
 		}
 	}
 
+	// Set all squares back to white
+	public void resetGrid() {
+		for(Rectangle[] i : this.grid) {
+			for (Rectangle j : i) {
+				j.setFill(WHITE);
+				j.setStrokeWidth(.5);
+			}
+		}
+	}
+
 }
