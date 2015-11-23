@@ -20,10 +20,6 @@ public class Config {
     public static final int RECTSIZE = 8;
     public static final int ANTSTARTX = 37;
     public static final int ANTSTARTY = 37;
-    public static final int TURNS = 11000;
-
-    // timestep is no longer constant
-    public static final int TIMESTEP = 100;
 
     public static final double BTNWIDTH = 80.0;
 
@@ -34,5 +30,6 @@ public class Config {
     public static final Color WHITE = Color.GHOSTWHITE;
 
     public static final String RULESTITLE = "Rules for Langton's Ant";
+    public static final String HEADERTEXT = "Langton's Ant";
 
 }

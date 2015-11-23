@@ -2,13 +2,13 @@ package application;
 
 import static application.Config.*;
 
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class Grid {
 
 	Rectangle[][] grid;
 	public Grid() {
+
 		// DRAW GRID
         this.grid = new Rectangle[GRIDSIZE][GRIDSIZE];
 
@@ -19,15 +19,13 @@ public class Grid {
 			for (int j=0;j<grid.length;j++) {
 				grid[i][j] = new Rectangle();
 				grid[i][j].setFill(WHITE);
-				grid[i][j].setStroke(Color.BLACK);
+				grid[i][j].setStroke(OFFBLACK);
 				grid[i][j].setStrokeWidth(.5);
 				grid[i][j].setX(x);
 				grid[i][j].setY(y);
 				grid[i][j].setWidth(RECTSIZE);
 				grid[i][j].setHeight(RECTSIZE);
 				x+=RECTSIZE;
-
-				//root.getChildren().add(grid[i][j]);
 			}
 			y+=RECTSIZE;
 			x=0;

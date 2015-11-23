@@ -1,11 +1,6 @@
 package application;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import java.lang.System;
 import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -21,13 +16,11 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -47,25 +40,25 @@ public class Main extends Application {
 	boolean isRight = true;
     final Timeline loop = new Timeline();
     Rectangle currentSquare = new Rectangle();
+    Label turnLabel;
 
 	@Override
 	public void start(Stage primaryStage) {
-		//BorderPane root = new BorderPane();
 		Group root = new Group();
 		Scene scene = new Scene(root,WINDOWWIDTH,WINDOWHEIGHT,BACKGROUND);
 		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-		primaryStage.setTitle("Langton's Ant");
+		primaryStage.setTitle(HEADERTEXT);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 
 		// Set background
-		ImageView table = new ImageView(new Image(getClass().getResourceAsStream("/bg_clipped2.png")));
-        table.setFocusTraversable(true);
-        table.setLayoutX(600);
-        table.setLayoutY(0);
-        table.setFitWidth(300);
-        table.setFitHeight(600);
-        root.getChildren().add(table);
+		ImageView menuImg = new ImageView(new Image(getClass().getResourceAsStream("/bg_clipped2.png")));
+        menuImg.setFocusTraversable(true);
+        menuImg.setLayoutX(600);
+        menuImg.setLayoutY(0);
+        menuImg.setFitWidth(300);
+        menuImg.setFitHeight(600);
+        root.getChildren().add(menuImg);
 
 		// Add Rules
 		Text rulesTitle = new Text(RULESTITLE);
@@ -75,9 +68,14 @@ public class Main extends Application {
 				+ " 90 degrees to the right and moves forward one square. \n \n"
 				+ "2. If current square is black it changes to white, the Ant rotates"
 				+ " 90 degrees to the left and moves forward one square.  \n");
-		rules.setWrappingWidth(270);
-		rules.setFont(Font.font ("Sans Regular", 16));
+		rules.setWrappingWidth(280);
+		rules.setFont(Font.font ("Ubuntu Mono", 16));
 		rules.setFill(WHITE);
+
+		// Turn count text
+		turnLabel = new Label("Turn Count: " + turnCount);
+		turnLabel.setFont(Font.font("Ubuntu Mono", 16));
+		turnLabel.setTextFill(WHITE);
 
 		// Reset/Play/Stop button
         Button reset = new Button("Reset");
@@ -103,13 +101,21 @@ public class Main extends Application {
 
     	// HBox containing buttons
         HBox hbox = new HBox(8);
-        hbox.getChildren().addAll(pause, play, reset);
+        hbox.getChildren().addAll(
+        		pause,
+        		play,
+        		reset);
 
-        // VBox containing text
-        VBox vbox = new VBox(6);
-        vbox.getChildren().addAll(rulesTitle, rules, hbox, timeStep);
+        // VBox containing text and buttons
+        VBox vbox = new VBox(10);
+        vbox.getChildren().addAll(
+        		rulesTitle,
+        		rules,
+        		hbox,
+        		timeStep,
+        		turnLabel);
         vbox.setAlignment(Pos.CENTER);
-        vbox.setLayoutX(610);
+        vbox.setLayoutX(620);
         vbox.setLayoutY(73);
         root.getChildren().add(vbox);
 
@@ -120,6 +126,7 @@ public class Main extends Application {
         	}
         }
 
+        // Create and start timeline
 		makeTimeline(timeStep, mainGrid);
 
 		// Set reset button action
@@ -127,8 +134,10 @@ public class Main extends Application {
             @Override public void handle(ActionEvent e) {
                 resetGrid(mainGrid);
                 currentSquare = mainGrid.grid[ANTSTARTX][ANTSTARTY];
-
-
+                turnCount = 1;
+            	a = ANTSTARTX;
+            	b = ANTSTARTY;
+                loop.playFromStart();
             }
         });
 
@@ -177,10 +186,10 @@ public class Main extends Application {
 	public static void setOnStroke(Rectangle cs) {
 		cs.setStrokeWidth(.5);
 		cs.setStroke(ANTONCOLOR);
-		cs.setStrokeWidth(1.5);
+		cs.setStrokeWidth(2.5);
 	}
 
-	// Set all square back to white
+	// Set all squares back to white
 	public void resetGrid(Grid gd) {
 		for(Rectangle[] i : gd.grid) {
 			for (Rectangle j : i) {
@@ -189,20 +198,23 @@ public class Main extends Application {
 			}
 		}
 	}
+
+	// Method to wrap timeline in a ChangeListener. Could probably be combined with startLoop
 	public void makeTimeline(ComboBox<Double> timeOptions, Grid gr) {
         loop.setCycleCount(Timeline.INDEFINITE);
 
         timeOptions.valueProperty().addListener(new ChangeListener<Double>() {
             @Override
             public void changed(ObservableValue<? extends Double> observable, Double oldValue, Double newValue) {
-                resetTimer(loop, newValue, gr);
+                startLoop(loop, newValue, gr);
             }
         });
 
+        // Default selection is 100 ms
         timeOptions.getSelectionModel().select(2);
     }
 
-    public void resetTimer(Timeline tl, double deltaT, Grid gr) {
+    public void startLoop(Timeline tl, double deltaT, Grid gr) {
         KeyFrame keyFrame = new KeyFrame(
             Duration.millis(deltaT),
             new EventHandler<ActionEvent>() {
@@ -210,6 +222,7 @@ public class Main extends Application {
                 @Override
                 public void handle(ActionEvent event) {
 
+                	// For directions UP and RIGHT, moving to the right is in the + direction
                     if(direction == "UP" || direction == "RIGHT") {
                     	right = 1;
                     	left = -1;
@@ -247,8 +260,10 @@ public class Main extends Application {
 					currentSquare = gr.grid[a][b];
 					setOnStroke(currentSquare);
 
-					// Iterate i
+					// Update turn count
 					turnCount++;
+					turnLabel.setText("Turn Count: " + turnCount);
+
                 }
             }
         );
