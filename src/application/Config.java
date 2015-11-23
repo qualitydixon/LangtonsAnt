@@ -21,11 +21,15 @@ public class Config {
     public static final int ANTSTARTX = 37;
     public static final int ANTSTARTY = 37;
     public static final int TURNS = 11000;
+
+    // timestep is no longer constant
     public static final int TIMESTEP = 100;
+
+    public static final double BTNWIDTH = 80.0;
 
     public static final Color LGreen = Color.web("#e8f5e9");
     public static final Color OFFBLACK = Color.web("#212121");
-    public static final Color ANTON = Color.web("#d50000");
+    public static final Color ANTONCOLOR = Color.web("#d50000");
     public static final Color BACKGROUND = Color.web("#e0e0e0");
     public static final Color WHITE = Color.GHOSTWHITE;
 
