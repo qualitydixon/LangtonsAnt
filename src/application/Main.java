@@ -132,25 +132,25 @@ public class Main extends Application {
                                 }
 
             					// Determine next square based on color of Square and whether turn is even or odd
-            					if(mu.turnCount%2==0 && currentSquare.getFill()==WHITE){
+            					if (mu.turnCount%2==0 && currentSquare.getFill()==WHITE) {
             						a = a + right;
             						isRight = true;
-            					}else if(mu.turnCount%2==0 && currentSquare.getFill()==OFFBLACK){
+            					} else if (mu.turnCount%2==0 && currentSquare.getFill()==OFFBLACK) {
             						a = a + left;
             						isRight = false;
-            					}else if(mu.turnCount%2==1 && currentSquare.getFill()==WHITE){
+            					} else if (mu.turnCount%2==1 && currentSquare.getFill()==WHITE) {
             						b = b + right;
             						isRight = true;
-            					}else {
+            					} else {
             						b = b + left;
             						isRight = false;
             					}
             					direction = newDir(direction, isRight);
 
             					// Change color of current square
-            					if(currentSquare.getFill()==WHITE){
+            					if (currentSquare.getFill()==WHITE) {
             						currentSquare.setFill(OFFBLACK);
-            					}else{currentSquare.setFill(WHITE);}
+            					} else {currentSquare.setFill(WHITE);}
 
             					// Change stroke back to Black
             					currentSquare.setStroke(OFFBLACK);
