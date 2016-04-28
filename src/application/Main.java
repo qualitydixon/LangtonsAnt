@@ -157,8 +157,11 @@ public class Main extends Application {
             					currentSquare.setStrokeWidth(.5);
 
             					// Set new current square
-            					currentSquare = gr.grid[a][b];
-            					setOnStroke(currentSquare);
+            					if (a < GRIDSIZE || b < GRIDSIZE) {
+            						currentSquare = gr.grid[a][b];
+                					setOnStroke(currentSquare);
+            					}
+            					
 
             					// Update turn count
             					mu.turnCount++;
